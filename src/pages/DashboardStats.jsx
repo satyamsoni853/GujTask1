@@ -1,6 +1,6 @@
 import React from "react";
 import { useProducts } from "../context/ProductContext";
-import { Package, DollarSign, AlertCircle, TrendingUp } from "lucide-react";
+import { Package, IndianRupee, AlertCircle, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const StatCard = ({ title, value, icon: Icon, color, subtitle }) => (
@@ -51,7 +51,7 @@ const StatCard = ({ title, value, icon: Icon, color, subtitle }) => (
 );
 
 const DashboardStats = () => {
-  const { products } = useProducts();
+  const { filteredProducts: products } = useProducts();
 
   const totalProducts = products.length;
   const totalValue = products.reduce(
@@ -68,9 +68,9 @@ const DashboardStats = () => {
           <h2>Dashboard Overview</h2>
           <p className="page-subtitle">Welcome back to Nexus Admin</p>
         </div>
-        <Link to="/products/new" className="btn btn-primary">
+        <Link to="/products" className="btn btn-primary">
           <Package size={20} />
-          <span>New Product</span>
+          <span>Manage Products</span>
         </Link>
       </div>
 
@@ -91,10 +91,11 @@ const DashboardStats = () => {
         />
         <StatCard
           title="Total Inventory Value"
-          value={`$${totalValue.toLocaleString(undefined, {
+          value={`₹${(totalValue * 83).toLocaleString(undefined, {
             minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
           })}`}
-          icon={DollarSign}
+          icon={IndianRupee}
           color="#22c55e"
           subtitle="+5% from last month"
         />

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useProducts } from "../context/ProductContext";
 import { Edit, Trash2, Plus } from "lucide-react";
 import ProductModal from "../components/ProductModal";
+import { toast } from "react-toastify";
 
 const ProductList = () => {
   const {
@@ -26,13 +27,18 @@ const ProductList = () => {
   };
 
   const handleSaveProduct = async (productData) => {
-    if (currentProduct) {
-      await updateProduct(currentProduct.id, productData);
-    } else {
-      await addProduct(productData);
+    try {
+      if (currentProduct) {
+        await updateProduct(currentProduct.id, productData);
+        toast.success("Product updated successfully!");
+      } else {
+        await addProduct(productData);
+        toast.success("Product added successfully!");
+      }
+      setIsModalOpen(false);
+    } catch (error) {
+      toast.error(error.message || "Failed to save product.");
     }
-    // Optimistic update handled in context, just close modal
-    setIsModalOpen(false);
   };
 
   if (loading && products.length === 0) {
@@ -101,7 +107,7 @@ const ProductList = () => {
                 </h3>
                 <div className="card-footer">
                   <div className="card-price">
-                    ${Number(product.price).toFixed(2)}
+                    ₹{Number(product.price * 83).toFixed(2)}
                   </div>
                   <div style={{ display: "flex", gap: "0.5rem" }}>
                     <button
@@ -112,13 +118,20 @@ const ProductList = () => {
                       <Edit size={18} />
                     </button>
                     <button
-                      onClick={() => {
+                      onClick={async () => {
                         if (
                           window.confirm(
                             "Are you sure you want to delete this product?"
                           )
                         ) {
-                          deleteProduct(product.id);
+                          try {
+                            await deleteProduct(product.id);
+                            toast.success("Product deleted successfully!");
+                          } catch (error) {
+                            toast.error(
+                              error.message || "Failed to delete product."
+                            );
+                          }
                         }
                       }}
                       className="btn-icon btn-danger"

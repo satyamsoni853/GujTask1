@@ -41,7 +41,6 @@ const DashboardLayout = () => {
   const navItems = [
     { to: "/", icon: LayoutDashboard, label: "Dashboard" },
     { to: "/products", icon: Package, label: "Products" },
-    { to: "/products/new", icon: PlusCircle, label: "Add Product" },
   ];
 
   return (
